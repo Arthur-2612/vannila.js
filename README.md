@@ -50,6 +50,25 @@ Cada projeto possui sua própria estrutura de arquivos (`HTML`, `CSS` e `JavaScr
 
 Construir uma coleção de projetos práticos que demonstre minha evolução no desenvolvimento Front-end utilizando **JavaScript Vanilla**, servindo como portfólio e material de consulta para estudos futuros.
 
+# 📖 Aulas
+
+## Aula 1 - Apresentação da Disciplina e Contextualização
+
+### 📚 Resumo
+
+- Introdução à disciplina de **Frameworks Front-end**;
+- Importância do desenvolvimento Front-end e dos frameworks no mercado;
+- Conceitos iniciais de HTML, CSS e JavaScript (Vanilla JS);
+- Apresentação da metodologia de ensino e critérios de avaliação;
+- Introdução ao Git, GitHub e Vercel como ferramentas do fluxo de desenvolvimento.
+
+### 💻 Projeto Desenvolvido
+
+**Jogo da Forca** desenvolvido utilizando apenas **HTML, CSS e JavaScript (Vanilla JS)**.
+
+- 🔗 **Repositório:** https://github.com/Arthur-2612/vannila.js
+- 🌐 **Deploy:** https://vannila-js.vercel.app/
+
 ---
 
 ⭐ Este repositório é atualizado continuamente conforme novos projetos são desenvolvidos.
