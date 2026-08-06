@@ -1,4 +1,4 @@
-````md
+
 # 🚀 Vanilla JavaScript Projects
 
 > Repositório dedicado ao desenvolvimento de pequenos projetos utilizando **HTML, CSS e JavaScript (Vanilla JS)**, com o objetivo de praticar lógica de programação, manipulação do DOM e conceitos fundamentais do desenvolvimento Front-end.
@@ -54,3 +54,4 @@ Construir uma coleção de projetos práticos que demonstre minha evolução no 
 
 ⭐ Este repositório é atualizado continuamente conforme novos projetos são desenvolvidos.
 ````
+
