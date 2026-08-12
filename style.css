@@ -1,99 +1,459 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+/* ============================
+   Design System — Jogo da Forca
+   ============================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap');
+
+:root {
+    --bg-dark:      #0b0f1a;
+    --surface:      #131929;
+    --surface-2:    #1c2540;
+    --accent:       #6c63ff;
+    --accent-glow:  rgba(108, 99, 255, 0.35);
+    --danger:       #ff4f6d;
+    --danger-glow:  rgba(255, 79, 109, 0.3);
+    --success:      #39d98a;
+    --success-glow: rgba(57, 217, 138, 0.3);
+    --text-primary: #e8eaf6;
+    --text-muted:   #7b82a6;
+    --gallows-stroke: #5c6690;
+    --body-stroke:  #ff4f6d;
+    --radius-lg:    20px;
+    --radius-md:    12px;
+    --radius-sm:    8px;
+    --transition:   0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-body{
-
-    background:#1b263b;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    height:100vh;
+/* ---- Reset & Base ---- */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.container{
-
-    background:white;
-
-    padding:40px;
-
-    width:450px;
-
-    text-align:center;
-
-    border-radius:15px;
-
-    box-shadow:0px 0px 20px rgba(0,0,0,.3);
+body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px 16px;
+    overflow-x: hidden;
+    position: relative;
 }
 
-h1{
-
-    margin-bottom:25px;
+/* ---- Background glows ---- */
+.bg-glow {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+}
+.glow-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, #6c63ff 0%, transparent 70%);
+    top: -180px; left: -180px;
+}
+.glow-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, #ff4f6d 0%, transparent 70%);
+    bottom: -150px; right: -120px;
 }
 
-.palavra{
-
-    font-size:38px;
-
-    letter-spacing:10px;
-
-    margin:30px;
+/* ---- Container ---- */
+.container {
+    position: relative;
+    z-index: 1;
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: var(--radius-lg);
+    padding: 36px 40px 40px;
+    width: 100%;
+    max-width: 520px;
+    box-shadow:
+        0 0 0 1px rgba(108,99,255,0.08),
+        0 24px 64px rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
 }
 
-.erradas{
-
-    color:red;
-
-    min-height:30px;
-
-    margin-bottom:20px;
+/* ---- Header ---- */
+.game-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+h1 {
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    font-weight: 900;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #a8a4ff 0%, #6c63ff 50%, #ff4f6d 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 300;
+    margin-top: 4px;
 }
 
-input{
-
-    width:120px;
-
-    padding:12px;
-
-    font-size:20px;
-
-    text-align:center;
-
-    margin-top:20px;
+/* ---- Game Area ---- */
+.game-area {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
-button{
-
-    margin-top:20px;
-
-    padding:12px 25px;
-
-    cursor:pointer;
-
-    border:none;
-
-    border-radius:8px;
-
-    background:#0077b6;
-
-    color:white;
-
-    font-size:16px;
-
-    transition:.3s;
+/* ---- Gallows SVG ---- */
+.gallows-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 }
 
-button:hover{
-
-    background:#023e8a;
+#forca-svg {
+    width: 200px;
+    height: 220px;
 }
 
-#mensagem{
+.gallows-part {
+    stroke: var(--gallows-stroke);
+    fill: none;
+}
 
-    margin-top:25px;
+.body-part {
+    stroke: var(--body-stroke);
+    fill: none;
+    opacity: 0;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    transition: stroke-dashoffset 0.5s ease, opacity 0.3s ease;
+}
+
+.body-part.visible {
+    opacity: 1;
+    stroke-dashoffset: 0;
+}
+
+.error-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--surface-2);
+    border: 1px solid rgba(255,79,109,0.25);
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 0.85rem;
+    color: var(--danger);
+    font-weight: 600;
+}
+.error-badge span:first-child {
+    font-size: 1.1rem;
+    font-weight: 900;
+}
+
+/* ---- Word Display ---- */
+.word-section {
+    text-align: center;
+}
+
+.palavra {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;        /* gap entre grupos de palavras */
+    min-height: 60px;
+    align-items: flex-end;
+    margin-bottom: 8px;
+}
+
+/* Cada grupo de letras (palavra/trecho) fica junto */
+.word-group {
+    display: inline-flex;
+    gap: 6px;
+    align-items: flex-end;
+}
+
+/* Cada letra individual */
+.letra-slot {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 24px;
+}
+
+.letra-char {
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    font-weight: 700;
+    height: 32px;
+    line-height: 32px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    transition: all var(--transition);
+}
+
+.letra-char.revealed {
+    color: var(--success);
+    animation: pop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.letra-line {
+    width: 100%;
+    min-width: 18px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: background var(--transition);
+}
+
+.letra-char.revealed + .letra-line,
+.letra-slot.revealed .letra-line {
+    background: var(--success);
+}
+
+@keyframes pop {
+    0%   { transform: scale(0.5) translateY(8px); opacity: 0; }
+    100% { transform: scale(1)   translateY(0);   opacity: 1; }
+}
+
+.hint-text {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+/* ---- Wrong Letters ---- */
+.wrong-section {
+    text-align: center;
+}
+.section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+.erradas {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 36px;
+}
+.wrong-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    background: rgba(255,79,109,0.12);
+    border: 1px solid rgba(255,79,109,0.4);
+    border-radius: var(--radius-sm);
+    color: var(--danger);
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    animation: slideIn 0.25s ease;
+}
+@keyframes slideIn {
+    from { transform: scale(0.6); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+
+/* ---- Controls ---- */
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+.input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+input#letra {
+    width: 70px;
+    height: 56px;
+    background: var(--surface-2);
+    border: 2px solid rgba(108,99,255,0.3);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    text-transform: uppercase;
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    letter-spacing: 0;
+}
+input#letra:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+}
+input#letra:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+button {
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    border: none;
+    font-weight: 600;
+    transition: all var(--transition);
+}
+
+#btn {
+    height: 56px;
+    padding: 0 28px;
+    background: linear-gradient(135deg, #7c73ff, var(--accent));
+    color: white;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 20px var(--accent-glow);
+}
+#btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px var(--accent-glow);
+    background: linear-gradient(135deg, #8a82ff, #7c73ff);
+}
+#btn:active  { transform: translateY(0); }
+#btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+.btn-secondary {
+    background: var(--surface-2);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-muted);
+    border-radius: var(--radius-md);
+    padding: 10px 22px;
+    font-size: 0.9rem;
+}
+.btn-secondary:hover {
+    background: rgba(255,255,255,0.06);
+    color: var(--text-primary);
+    border-color: rgba(255,255,255,0.15);
+    transform: translateY(-1px);
+}
+
+/* ---- Mensagem ---- */
+.mensagem {
+    text-align: center;
+    font-size: 1.15rem;
+    font-weight: 700;
+    min-height: 40px;
+    padding: 10px;
+    border-radius: var(--radius-md);
+    transition: all var(--transition);
+}
+.mensagem.ganhou {
+    background: rgba(57,217,138,0.12);
+    color: var(--success);
+    border: 1px solid rgba(57,217,138,0.35);
+    animation: pulse 1.5s infinite alternate;
+}
+.mensagem.perdeu {
+    background: rgba(255,79,109,0.1);
+    color: var(--danger);
+    border: 1px solid rgba(255,79,109,0.35);
+}
+
+@keyframes pulse {
+    from { box-shadow: 0 0 0   0 var(--success-glow); }
+    to   { box-shadow: 0 0 20px 4px var(--success-glow); }
+}
+
+/* ---- Explosion Animation ---- */
+
+/* Flash de explosão no wrapper */
+@keyframes explode-flash {
+    0%   { filter: brightness(1); }
+    15%  { filter: brightness(6) saturate(0); }
+    30%  { filter: brightness(1); }
+    45%  { filter: brightness(3) saturate(0); }
+    100% { filter: brightness(1); }
+}
+
+/* Tremor da forca */
+@keyframes shake-gallows {
+    0%,100% { transform: translate(0, 0) rotate(0deg); }
+    10%     { transform: translate(-6px,  3px) rotate(-2deg); }
+    20%     { transform: translate( 6px, -3px) rotate( 2deg); }
+    30%     { transform: translate(-8px,  0px) rotate(-3deg); }
+    40%     { transform: translate( 8px,  2px) rotate( 3deg); }
+    50%     { transform: translate(-4px, -4px) rotate(-1deg); }
+    60%     { transform: translate( 4px,  4px) rotate( 1deg); }
+    70%     { transform: translate(-2px,  0px); }
+    80%     { transform: translate( 2px, -2px); }
+}
+
+/* Partes do boneco explodindo para direções diferentes */
+@keyframes fly-head {
+    0%   { transform: translate(0,0)   rotate(0deg)   scale(1);   opacity: 1; }
+    20%  { transform: translate(5px,-20px) rotate(30deg) scale(1.2); opacity: 1; }
+    100% { transform: translate(60px,-120px) rotate(720deg) scale(0); opacity: 0; }
+}
+@keyframes fly-trunk {
+    0%   { transform: translate(0,0) scale(1);   opacity: 1; }
+    100% { transform: translate(-80px, 60px) scale(0) rotate(180deg); opacity: 0; }
+}
+@keyframes fly-arm-l {
+    0%   { transform: translate(0,0) rotate(0deg)   scale(1);   opacity: 1; }
+    100% { transform: translate(-100px,-40px) rotate(-300deg) scale(0); opacity: 0; }
+}
+@keyframes fly-arm-r {
+    0%   { transform: translate(0,0) rotate(0deg)   scale(1);   opacity: 1; }
+    100% { transform: translate(100px,-40px)  rotate(300deg)  scale(0); opacity: 0; }
+}
+@keyframes fly-leg-l {
+    0%   { transform: translate(0,0) rotate(0deg)   scale(1);   opacity: 1; }
+    100% { transform: translate(-70px, 100px) rotate(-200deg) scale(0); opacity: 0; }
+}
+@keyframes fly-leg-r {
+    0%   { transform: translate(0,0) rotate(0deg)   scale(1);   opacity: 1; }
+    100% { transform: translate(70px,  100px) rotate(200deg)  scale(0); opacity: 0; }
+}
+
+.explodindo .gallows-wrapper {
+    animation: shake-gallows 0.5s ease forwards;
+}
+
+.explodindo #forca-svg {
+    animation: explode-flash 0.6s ease forwards;
+}
+
+.explodindo #body-head   { animation: fly-head  0.8s 0.2s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+.explodindo #body-trunk  { animation: fly-trunk 0.7s 0.3s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+.explodindo #body-arm-l  { animation: fly-arm-l 0.75s 0.25s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+.explodindo #body-arm-r  { animation: fly-arm-r 0.75s 0.35s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+.explodindo #body-leg-l  { animation: fly-leg-l 0.8s 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+.explodindo #body-leg-r  { animation: fly-leg-r 0.8s 0.45s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+
+/* Partículas de explosão */
+.particle {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particle-fly 0.8s ease forwards;
+}
+@keyframes particle-fly {
+    0%   { transform: translate(0,0) scale(1);   opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 480px) {
+    .container { padding: 28px 20px 32px; }
+    .input-group { flex-wrap: wrap; justify-content: center; }
+    #btn { width: 100%; }
 }

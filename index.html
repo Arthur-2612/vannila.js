@@ -4,42 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jogo da Forca</title>
-
+    <meta name="description" content="Jogo da Forca moderno com palavras do mundo da tecnologia. Adivinhe a palavra antes que o boneco seja enforcado!">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="container">
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
 
-    <h1>🎯 Jogo da Forca</h1>
+    <div class="container">
 
-    <div id="palavra" class="palavra"></div>
+        <header class="game-header">
+            <h1>🪢 Jogo da Forca</h1>
+            <p class="subtitle">Adivinhe a palavra — tecnologia é o tema!</p>
+        </header>
 
-    <h3>Letras Erradas</h3>
+        <main class="game-area">
 
-    <div id="erradas" class="erradas"></div>
+            <!-- Boneco da Forca (SVG) -->
+            <div class="gallows-wrapper">
+                <svg id="forca-svg" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg" aria-label="Boneco da forca">
+                    <!-- Estrutura da forca (sempre visível) -->
+                    <line class="gallows-part" x1="20" y1="210" x2="180" y2="210" stroke-width="6" stroke-linecap="round"/>
+                    <line class="gallows-part" x1="60" y1="210" x2="60" y2="20"  stroke-width="6" stroke-linecap="round"/>
+                    <line class="gallows-part" x1="60" y1="20"  x2="130" y2="20"  stroke-width="6" stroke-linecap="round"/>
+                    <line class="gallows-part" x1="130" y1="20" x2="130" y2="45" stroke-width="4" stroke-linecap="round"/>
 
-    <h3>Tentativas Restantes</h3>
+                    <!-- Partes do boneco (ocultas inicialmente) -->
+                    <!-- Cabeça -->
+                    <circle id="body-head"   cx="130" cy="60" r="16" class="body-part" fill="none" stroke-width="3.5"/>
+                    <!-- Corpo -->
+                    <line   id="body-trunk"  x1="130" y1="76" x2="130" y2="130" class="body-part" stroke-width="3.5" stroke-linecap="round"/>
+                    <!-- Braço esquerdo -->
+                    <line   id="body-arm-l"  x1="130" y1="90" x2="105" y2="115" class="body-part" stroke-width="3.5" stroke-linecap="round"/>
+                    <!-- Braço direito -->
+                    <line   id="body-arm-r"  x1="130" y1="90" x2="155" y2="115" class="body-part" stroke-width="3.5" stroke-linecap="round"/>
+                    <!-- Perna esquerda -->
+                    <line   id="body-leg-l"  x1="130" y1="130" x2="105" y2="165" class="body-part" stroke-width="3.5" stroke-linecap="round"/>
+                    <!-- Perna direita -->
+                    <line   id="body-leg-r"  x1="130" y1="130" x2="155" y2="165" class="body-part" stroke-width="3.5" stroke-linecap="round"/>
+                </svg>
 
-    <div id="tentativas"></div>
+                <!-- Indicador de erros -->
+                <div class="error-badge">
+                    <span id="erros-count">0</span>
+                    <span>/6 erros</span>
+                </div>
+            </div>
 
-    <input
-        type="text"
-        id="letra"
-        maxlength="1"
-        placeholder="Digite uma letra">
+            <!-- Área da palavra -->
+            <div class="word-section">
+                <div id="palavra" class="palavra" aria-label="Palavra a ser descoberta"></div>
+                <p class="hint-text">Uma letra de cada vez 👆</p>
+            </div>
 
-    <br>
+            <!-- Letras erradas -->
+            <div class="wrong-section">
+                <p class="section-label">Letras erradas</p>
+                <div id="erradas" class="erradas" aria-live="polite"></div>
+            </div>
 
-    <button id="btn">Tentar</button>
+            <!-- Input e botões -->
+            <div class="controls">
+                <div class="input-group">
+                    <input
+                        type="text"
+                        id="letra"
+                        maxlength="1"
+                        placeholder="A"
+                        autocomplete="off"
+                        aria-label="Digite uma letra">
+                    <button id="btn" aria-label="Tentar letra">Tentar</button>
+                </div>
+                <button id="novo" class="btn-secondary" aria-label="Novo jogo">🔄 Novo Jogo</button>
+            </div>
 
-    <button id="novo">Novo Jogo</button>
+            <!-- Mensagem de fim de jogo -->
+            <div id="mensagem" class="mensagem" aria-live="assertive"></div>
 
-    <h2 id="mensagem"></h2>
+        </main>
 
-</div>
+    </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
